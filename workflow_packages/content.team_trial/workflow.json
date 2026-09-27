@@ -1,0 +1,118 @@
+{
+  "package_format": "tin-workflow-package-v1",
+  "definition": {
+    "key": "content.team_trial",
+    "title": "Write the brief a buyer can forward to their team",
+    "description": "Turn existing Tin product evidence into one concise, forwardable trial proposal with supported capabilities, access requirements, honest limits and an observable decision.",
+    "version": "1.0.0",
+    "executor": "codex.procedure",
+    "schedule_modes": [
+      "on_demand"
+    ],
+    "human_review": {
+      "eligible": true,
+      "summary": "Review the buyer-facing copy and its evidence before sharing"
+    },
+    "input_schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "project_id"
+      ],
+      "properties": {
+        "project_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "reader": {
+          "type": "string",
+          "maxLength": 250,
+          "default": "",
+          "title": "Optional teammate or decision reader"
+        },
+        "focus": {
+          "type": "string",
+          "maxLength": 500,
+          "default": "",
+          "title": "Optional use case for this brief"
+        },
+        "trial_minutes": {
+          "type": "integer",
+          "minimum": 15,
+          "maximum": 60,
+          "default": 30,
+          "title": "Proposed trial timebox (minutes)"
+        }
+      }
+    },
+    "prerequisites": [
+      {
+        "kind": "artifact",
+        "level": "required",
+        "path": "reports/GROWTH_ONBOARDING_PLAN.md",
+        "reason": "Use the existing business, audience and marketing constraints."
+      },
+      {
+        "kind": "artifact",
+        "level": "required",
+        "path": "wiki/INDEX.md",
+        "section": "### Code map",
+        "reason": "Use the existing product code map instead of inventing features."
+      },
+      {
+        "kind": "artifact",
+        "level": "recommended",
+        "path": "wiki/INDEX.md",
+        "section": "### Feature map",
+        "reason": "Prefer observed product behavior when available."
+      },
+      {
+        "kind": "artifact",
+        "level": "recommended",
+        "path": ".agents/skills/writing-style/SKILL.md",
+        "reason": "Use the approved writing voice when available."
+      }
+    ],
+    "integration_requirements": [
+      {
+        "provider_key": "infra.github",
+        "capabilities": [
+          "contents.read"
+        ],
+        "required": true
+      }
+    ],
+    "procedure": {
+      "prompt_path": "PROMPT.md",
+      "skills_path": "skills",
+      "entry_skill": "team-trial",
+      "skill_files": [
+        "skills/team-trial/SKILL.md",
+        "skills/team-trial/METHOD.md",
+        "skills/team-trial/CHECK.md"
+      ],
+      "workspace": {
+        "kind": "github.repository",
+        "provider_key": "infra.github",
+        "capabilities": [
+          "contents.read"
+        ],
+        "limits": {
+          "max_files": 1000,
+          "max_bytes": 100000000
+        }
+      },
+      "sandbox": {
+        "profile": "isolated",
+        "egress": "fenced",
+        "timeout_seconds": 900
+      },
+      "output": {
+        "kind": "project.artifact",
+        "path": "reports/TEAM_TRIAL.json",
+        "media_type": "application/json",
+        "max_bytes": 48000
+      }
+    }
+  }
+}
