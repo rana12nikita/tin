@@ -1,0 +1,325 @@
+{
+  "version": 1,
+  "assumptions": [
+    "Cases require the described project-state fixtures; inputs alone do not establish the context.",
+    "Ordinary live case needs an onboarded product with a Code map, public-safe documentation or qualified public-source evidence, verified access/setup context, and a meaningful teammate adoption decision.",
+    "Public-sharing classifications and claim entailment need independent human review."
+  ],
+  "effects": [
+    "Read project Files and selected GitHub repository contents; no external writes or network actions.",
+    "Write reports/TEAM_TRIAL.json. No sending, posting, purchase, repository mutation, PR or workflow start."
+  ],
+  "cost_drivers": [
+    "One bounded Codex procedure session, 900-second timeout; no explicit model routes or provider service calls.",
+    "Read at most 20 relevant files and 120000 UTF-8 bytes. Actual hosted cost remains unmeasured."
+  ],
+  "rubric": [
+    {
+      "id": "entailment",
+      "question": "Does every product claim actually follow from its cited source, including all qualifiers? Public-source conclusions must be labelled as implemented code unless separate runtime evidence exists. Reject deployment, clinical, compliance, concurrency, performance or readiness claims inferred from source alone, even if schema/reference checks pass."
+    },
+    {
+      "id": "forwardable",
+      "question": "Could the stated reader decide on one concrete trial without rewriting this into a business case? Is the copy free of internal-only facts and operational notes?"
+    },
+    {
+      "id": "trial",
+      "question": "Is the proposed trial executable using only supported capabilities, a safe sample and explicit access requirements, with observable continue/stop conditions?"
+    },
+    {
+      "id": "scope",
+      "question": "Is this one buyer-enablement asset rather than an audit, roadmap or marketing checklist?"
+    }
+  ],
+  "cases": [
+    {
+      "id": "ordinary",
+      "description": "Onboarded B2B project with documented capability, access and limitation. Must produce finished copy; a diagnostic does not pass.",
+      "inputs": {
+        "trial_minutes": 30
+      },
+      "expect": {
+        "json_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "forwardable_markdown",
+            "review"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "ready"
+              ]
+            },
+            "forwardable_markdown": {
+              "type": "string",
+              "minLength": 300,
+              "maxLength": 16000
+            },
+            "review": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "notes",
+                "sources",
+                "selected_ids",
+                "word_count",
+                "proposed_minutes"
+              ],
+              "properties": {
+                "notes": {
+                  "type": "array",
+                  "maxItems": 6,
+                  "items": {
+                    "type": "string",
+                    "maxLength": 500
+                  }
+                },
+                "sources": {
+                  "type": "array",
+                  "maxItems": 12,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "kind",
+                      "text",
+                      "source",
+                      "public_url",
+                      "shareable"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "maxLength": 12
+                      },
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "capability",
+                          "access",
+                          "limitation",
+                          "price",
+                          "context"
+                        ]
+                      },
+                      "text": {
+                        "type": "string",
+                        "maxLength": 350
+                      },
+                      "source": {
+                        "type": "string",
+                        "maxLength": 500
+                      },
+                      "public_url": {
+                        "type": "string",
+                        "maxLength": 500
+                      },
+                      "shareable": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "selected_ids": {
+                  "type": "array",
+                  "maxItems": 12,
+                  "items": {
+                    "type": "string",
+                    "maxLength": 12
+                  }
+                },
+                "word_count": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 450
+                },
+                "proposed_minutes": {
+                  "type": "integer",
+                  "minimum": 15,
+                  "maximum": 60
+                }
+              }
+            }
+          }
+        },
+        "contains": [
+          "Working hypothesis:",
+          "Proposed 30-minute trial",
+          "Continue if:",
+          "Stop if:",
+          "## The decision"
+        ]
+      }
+    },
+    {
+      "id": "missing_context",
+      "description": "Project with onboarding and Code map files present but empty/incomplete for the use case. Admission succeeds; the procedure must return a diagnostic, not invent facts.",
+      "inputs": {},
+      "expect": {
+        "contains": [
+          "\"status\": \"needs_context\"",
+          "\"forwardable_markdown\": \"\""
+        ]
+      }
+    },
+    {
+      "id": "personal_only",
+      "description": "Onboarding explicitly describes a personal solo-use product with no team decision or collaborative use case.",
+      "inputs": {},
+      "expect": {
+        "contains": [
+          "\"status\": \"not_applicable\"",
+          "\"forwardable_markdown\": \"\""
+        ]
+      }
+    },
+    {
+      "id": "private_evidence_only",
+      "description": "Plausible unusable context: the only relevant feature claim is private roadmap/customer material, with no permission for public disclosure.",
+      "inputs": {},
+      "expect": {
+        "contains": [
+          "\"status\": \"needs_context\"",
+          "\"forwardable_markdown\": \"\""
+        ]
+      }
+    },
+    {
+      "id": "unknown_price",
+      "description": "Useful B2B case with access/capability/limitation evidence but no current verified published price. Produce brief while retaining explicit spend uncertainty.",
+      "inputs": {
+        "trial_minutes": 30
+      },
+      "expect": {
+        "json_schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "forwardable_markdown",
+            "review"
+          ],
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "ready"
+              ]
+            },
+            "forwardable_markdown": {
+              "type": "string",
+              "minLength": 300,
+              "maxLength": 16000
+            },
+            "review": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "notes",
+                "sources",
+                "selected_ids",
+                "word_count",
+                "proposed_minutes"
+              ],
+              "properties": {
+                "notes": {
+                  "type": "array",
+                  "maxItems": 6,
+                  "items": {
+                    "type": "string",
+                    "maxLength": 500
+                  }
+                },
+                "sources": {
+                  "type": "array",
+                  "maxItems": 12,
+                  "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "id",
+                      "kind",
+                      "text",
+                      "source",
+                      "public_url",
+                      "shareable"
+                    ],
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "maxLength": 12
+                      },
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "capability",
+                          "access",
+                          "limitation",
+                          "price",
+                          "context"
+                        ]
+                      },
+                      "text": {
+                        "type": "string",
+                        "maxLength": 350
+                      },
+                      "source": {
+                        "type": "string",
+                        "maxLength": 500
+                      },
+                      "public_url": {
+                        "type": "string",
+                        "maxLength": 500
+                      },
+                      "shareable": {
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "selected_ids": {
+                  "type": "array",
+                  "maxItems": 12,
+                  "items": {
+                    "type": "string",
+                    "maxLength": 12
+                  }
+                },
+                "word_count": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 450
+                },
+                "proposed_minutes": {
+                  "type": "integer",
+                  "minimum": 15,
+                  "maximum": 60
+                }
+              }
+            }
+          }
+        },
+        "contains": [
+          "Current price and ongoing spend are unverified.",
+          "Agree a spending limit"
+        ]
+      }
+    },
+    {
+      "id": "contradictory_access",
+      "description": "Onboarding says no account required while the current product map says trial access requires an enterprise agreement; sources do not resolve the conflict.",
+      "inputs": {},
+      "expect": {
+        "contains": [
+          "\"status\": \"needs_context\"",
+          "\"forwardable_markdown\": \"\""
+        ]
+      }
+    }
+  ]
+}
